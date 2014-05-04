@@ -12,3 +12,4 @@ class Persona(Titular):
         return self.nombre+" "+self.apellido1+" "+self.apellido2
     def getNif(self):
         return self.nif
+    #def writePersonas(self):
