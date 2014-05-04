@@ -19,7 +19,7 @@ def menu():
     print(" 1-.Consultar saldo ")
     print(" 2-.Realizar un movimiento")
     print(" 3-.Salir")
-def menuIngresar():
+def menuMovi():
     print("¿Que desea hacer en la cuenta ?")
     print("1-. Ingresar")
     print("2-. Retirar")
@@ -135,6 +135,7 @@ while eleccion != 3:
         print("Introduce tu nombre completo (ej: Jordi Blanch Salgado):")
         nombre = str(input())
         encontrado = False
+        eleccionMovi = 0
 
         with open('cuentas.txt',mode='r',encoding='utf-8')as archivo:
             for linia in archivo:
@@ -152,16 +153,9 @@ while eleccion != 3:
                     varMoneda = cuenta.getMoneda()
                     varSaldo = saldo
 
-                    # print("¿Que desea hacer en la cuenta ?")
-                    # print("1-. Ingresar")
-                    # print("2-. Retirar")
-                    # print("3-. Atras")
-                    eleccionMovi = 0
                     while eleccionMovi != 3:
-                        menuIngresar()
+                        menuMovi()
                         eleccionMovi = int(input())
-
-
 
                         #INGRESAR
                         if eleccionMovi == 1:
@@ -179,22 +173,27 @@ while eleccion != 3:
 
                             with open('cuentas.txt',mode='r',encoding='utf-8')as archivo:
                                 contenido = ""
+                                contModificad = ""
                                 for linia in archivo:
                                     titular,iban,moneda,saldo = linia.split(',',3)
-
                                     saldo = saldo.strip("\n")
+
                                     nuevoTit = titular.upper()
                                     nuevoNom = nombre.upper()
 
-                                    if nuevoTit != nuevoTit:
+                                    if nuevoNom != nuevoTit:
                                         contenido = contenido + (nuevoTit+","+iban+","+moneda+","+saldo+"\n")
+
                                     else:
                                         varSaldo = int(saldo)
                                         saldoAct = varSaldo + importe
                                         contModificad = titular+","+iban+","+moneda+","+str(saldoAct)+"\n"
 
+                                contTotal = contenido+contModificad
+
                             with open('cuentas.txt',mode='w',encoding='utf-8')as archivo:
-                                archivo.write(contenido+contModificad)
+                                archivo.write(contTotal)
+                                #archivo.write(contModificad)
                                 print("")
                                 print("---INGRESADO---")
                                 print("")
@@ -215,7 +214,10 @@ while eleccion != 3:
                             print(fecha,iban,importe,signo)
                             print("retirado")
                             menu()
-                    menu()
+
+
+                        if eleccionMovi == 3:
+                            menu()
         if encontrado == False:
             print("Titular no encontrado")
             menu()
