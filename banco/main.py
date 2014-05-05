@@ -123,7 +123,7 @@ while eleccion != 4:
                     varSaldo = saldo.strip("\n")
 
 
-                    if  titularN == varTitularN:
+                    if  titularN.upper() == varTitularN.upper():
                         print(varSaldo,moneda)
                         encontrado = True
                         menu()
@@ -289,10 +289,11 @@ while eleccion != 4:
 
                             if varCuentaIban == iban:
                                 print(linia)
+
             if encontrado == False:
                 print("Titular no encontrado")
 
-
+        menu()
 
     if eleccion == 4:
         print("")
