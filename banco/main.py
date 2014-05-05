@@ -7,6 +7,8 @@ from cuenta import Cuenta
 from empresa import Empresa
 from movimientos import Movimientos
 import datetime
+from random import randrange
+
 
 
 
@@ -17,8 +19,9 @@ def menu():
     print("¿Que desea hacer ahora?")
     print(" 0-.¡Añadir una cuenta!  (RECUERDE QUE NECESITARA UNA CUENTA ANTES DE USAR LAS OTRAS OPCIONES) ")
     print(" 1-.Consultar saldo ")
-    print(" 2-.Realizar un movimiento")
-    print(" 3-.Salir")
+    print(" 2-.Realizar un movimiento (ingresar/retirar)")
+    print(" 3-.Listar mis movimientos")
+    print(" 4-.Salir")
 def menuMovi():
     print("¿Que desea hacer en la cuenta ?")
     print("1-. Ingresar")
@@ -29,7 +32,7 @@ eleccion = 0
 eleccionMovi = 0
 varNombre = ""
 menu()
-while eleccion != 3:
+while eleccion != 4:
     eleccion = int(input())
 
     #AÑADIR CUENTA
@@ -62,8 +65,11 @@ while eleccion != 3:
 
             #CREACION CUENTA
             print("\nCreación de cuenta para particular:")
-            print("Introduce el iban ")
-            iban = str(input())
+            iban = str(randrange(2000,2999))
+            iban += " "+str(randrange(0,9999)).zfill(4)
+            iban += " "+str(randrange(0, 99)).zfill(2)
+            iban += " "+str(randrange(1000000000, 9999999999))
+
             print("Introduce la moneda ")
             moneda = str(input())
             saldo = "0"
@@ -91,8 +97,10 @@ while eleccion != 3:
 
             #CREACION CUENTA
             print("\nCreación de cuenta para empresa:")
-            print("Introduce el iban ")
-            iban = str(input())
+            iban = str(randrange(2000,2999))
+            iban += " "+str(randrange(0,9999)).zfill(4)
+            iban += " "+str(randrange(0, 99)).zfill(2)
+            iban += " "+str(randrange(1000000000, 9999999999))
             print("Introduce la moneda ")
             moneda = str(input())
             saldo = "0"
@@ -162,7 +170,8 @@ while eleccion != 3:
                             print("Introduzca la cantidad a ingresar:")
                             importe = int(input())
                             signo = "+"
-                            now = datetime.datetime.now()
+                            i = datetime.datetime.now()
+                            now= str(i.day)+"/"+str(i.month)+"/"+str(i.year)+" "+str(i.hour)+":"+ str(i.minute)+":"+str(i.second)
 
                             movimiento = Movimientos(now,varIban,importe,signo)
 
@@ -206,7 +215,8 @@ while eleccion != 3:
                             print("Introduzca la cantidad a retirar:")
                             importe = int(input())
                             signo = "-"
-                            now = datetime.datetime.now()
+                            i = datetime.datetime.now()
+                            now= str(i.day)+"/"+str(i.month)+"/"+str(i.year)+" "+str(i.hour)+":"+ str(i.minute)+":"+str(i.second)
 
                             movimiento = Movimientos(now,varIban,importe,signo)
 
@@ -246,7 +256,7 @@ while eleccion != 3:
                                     print("")
 
                                 #UPDATE FICHERO MOVIMIENTOS
-                                contMovi = str(fecha)+","+str(iban)+","+signo+""+str(importe)
+                                contMovi = str(fecha)+","+str(iban)+","+signo+""+str(importe)+"\n"
                                 with open('movimientos.txt',mode='a',encoding='utf-8')as archivo:
                                     archivo.write(contMovi)
 
@@ -259,10 +269,36 @@ while eleccion != 3:
 
 
     if eleccion == 3:
+        print("Debemos identificar la cuenta:")
+        print("Introduce tu nombre completo (ej: Jordi Blanch Salgado):")
+        nombre = str(input())
+
+        with open('cuentas.txt',mode='r',encoding='utf-8')as archivo:
+            encontrado = False
+            for linia in archivo:
+                titular,iban,moneda,saldo = linia.split(',',3)
+                saldo = saldo.strip("\n")
+
+                if titular.upper() == nombre.upper():
+                    encontrado = True
+                    varCuentaIban = iban
+                    with open('movimientos.txt',mode='r',encoding='utf-8')as archivo:
+                        for linia in archivo:
+                            fecha,iban,movimiento = linia.split(',',2)
+                            movimiento = movimiento.strip("\n")
+
+                            if varCuentaIban == iban:
+                                print(linia)
+            if encontrado == False:
+                print("Titular no encontrado")
+
+
+
+    if eleccion == 4:
         print("")
         print("Hasta la próxima")
         print("CERRANDO...")
     #SALIR
-    if eleccion != 1 and eleccion != 2 and eleccion != 0 and eleccion != 3:
+    if eleccion != 1 and eleccion != 2 and eleccion != 0 and eleccion != 3 and eleccion !=4:
         print("Introduce una opcion válida")
 
