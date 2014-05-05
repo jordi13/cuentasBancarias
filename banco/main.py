@@ -193,15 +193,18 @@ while eleccion != 3:
 
                             with open('cuentas.txt',mode='w',encoding='utf-8')as archivo:
                                 archivo.write(contTotal)
-                                #archivo.write(contModificad)
                                 print("")
                                 print("---INGRESADO---")
                                 print("")
 
+                            #UPDATE FICHERO MOVIMIENTOS
+                            contMovi = str(fecha)+","+str(iban)+","+signo+""+str(importe)+"\n"
+                            with open('movimientos.txt',mode='a',encoding='utf-8')as archivo:
+                                archivo.write(contMovi)
                         #RETIRAR
                         if eleccionMovi == 2:
                             print("Introduzca la cantidad a retirar:")
-                            importe = str(input())
+                            importe = int(input())
                             signo = "-"
                             now = datetime.datetime.now()
 
@@ -211,9 +214,41 @@ while eleccion != 3:
                             iban = movimiento.getIban()
                             importe = movimiento.getImporte()
                             signo = movimiento.getSigno()
-                            print(fecha,iban,importe,signo)
-                            print("retirado")
-                            menu()
+
+                            with open('cuentas.txt',mode='r',encoding='utf-8')as archivo:
+                                contenido = ""
+                                flag = False
+                                for linia in archivo:
+                                    titular,iban,moneda,saldo = linia.split(',',3)
+                                    saldo = saldo.strip("\n")
+
+                                    nuevoTit = titular.upper()
+                                    nuevoNom = nombre.upper()
+
+                                    if nuevoNom == nuevoTit:
+                                        if int(saldo) > int(importe):
+                                            saldoAct = int(saldo) - int(importe)
+                                            contModificad = titular+","+iban+","+moneda+","+str(saldoAct)+"\n"
+
+                                        else:
+                                            flag = True
+                                            print("")
+                                            print("Saldo insuficiente")
+                                            print("")
+                                    else:
+                                        contenido = contenido + (nuevoTit+","+iban+","+moneda+","+saldo+"\n")
+                                contTotal = contenido+contModificad
+                            if flag != True:
+                                with open('cuentas.txt',mode='w',encoding='utf-8')as archivo:
+                                    archivo.write(contTotal)
+                                    print("")
+                                    print("---RETIRADO---")
+                                    print("")
+
+                                #UPDATE FICHERO MOVIMIENTOS
+                                contMovi = str(fecha)+","+str(iban)+","+signo+""+str(importe)
+                                with open('movimientos.txt',mode='a',encoding='utf-8')as archivo:
+                                    archivo.write(contMovi)
 
 
                         if eleccionMovi == 3:
@@ -224,6 +259,8 @@ while eleccion != 3:
 
 
     if eleccion == 3:
+        print("")
+        print("Hasta la próxima")
         print("CERRANDO...")
     #SALIR
     if eleccion != 1 and eleccion != 2 and eleccion != 0 and eleccion != 3:
