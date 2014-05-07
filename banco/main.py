@@ -456,9 +456,7 @@ while eleccion != 5:
                             if flag != True:
                                 with open('cuentas.txt',mode='w',encoding='utf-8')as archivo:
                                     archivo.write(contTotal)
-                                    print("")
-                                    print("---RETIRADO---")
-                                    print("")
+
 
                                 #UPDATE FICHERO MOVIMIENTOS
                                 contMovi = str(fecha)+","+str(iban)+","+signo+""+str(importe)+"\n"
@@ -502,7 +500,7 @@ while eleccion != 5:
                                 with open('cuentas.txt',mode='w',encoding='utf-8')as archivo:
                                     archivo.write(contTotal)
                                     print("")
-                                    print("---INGRESADO---")
+                                    print("---Transferencia realizada---")
                                     print("")
 
                                 #UPDATE FICHERO MOVIMIENTOS
