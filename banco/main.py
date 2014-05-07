@@ -33,7 +33,7 @@ eleccion = 0
 eleccionMovi = 0
 varNombre = ""
 menu()
-while eleccion != 4:
+while eleccion != 5:
     eleccion = int(input())
 
     #AÑADIR CUENTA
