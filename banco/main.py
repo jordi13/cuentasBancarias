@@ -53,6 +53,18 @@ while eleccion != 4:
             apellido2 = var[2]
             print("Dni/Nif:")
             dni = str(input())
+            print("Introduzca el que va ser su numero pin (4 digitos)")
+            pin=str(input())
+            print("Repita el numero pin")
+            pin2=str(input())
+
+            while pin!=pin2:
+                print("Los numero pin no coinciden, vuelva intentarlo\n")
+                print("Introduzca el que va ser su numero pin (4 digitos)")
+                pin=str(input())
+                print("Repita el numero pin")
+                pin2=str(input())
+
 
             #CREACION PERSONA
             persona = Persona(nombre,apellido1,apellido2,dni)
@@ -61,7 +73,7 @@ while eleccion != 4:
 
             #ESCRIBIR EL TITULARES.TXT
             with open('titulares.txt', mode='a', encoding='utf-8')as archivo:
-                archivo.write(nombrePersona+","+nif+"\n")
+                archivo.write(nombrePersona+","+nif+","+pin+"\n")
 
             #CREACION CUENTA
             print("\nCreación de cuenta para particular:")
@@ -76,7 +88,7 @@ while eleccion != 4:
 
             #ESCRIBIR CUENTA
             with open('cuentas.txt',mode='a', encoding='utf-8')as archivo:
-                archivo.write(nombrePersona+","+iban+","+moneda+","+saldo+"\n")
+                archivo.write(nombrePersona+","+iban+","+moneda+","+saldo+","+pin+"\n")
             menu()
         #EMPRESA
         if tipo == 2:
@@ -84,6 +96,18 @@ while eleccion != 4:
             varNombre = str(input())
             print("Cif:")
             varCif = str(input())
+            dni = str(input())
+            print("Introduzca el que va ser su numero pin (4 digitos)")
+            pin=str(input())
+            print("Repita el numero pin")
+            pin2=str(input())
+
+            while pin!=pin2:
+                print("Los numero pin no coinciden, vuelva intentarlo\n")
+                print("Introduzca el que va ser su numero pin (4 digitos)")
+                pin=str(input())
+                print("Repita el numero pin")
+                pin2=str(input())
 
             #CREACION EMPRESA
             empresa = Empresa(varNombre,varCif)
@@ -93,7 +117,7 @@ while eleccion != 4:
 
             #ESCRIBIR EL TITULARES.TXT
             with open('titulares.txt', mode='a', encoding='utf-8')as archivo:
-                archivo.write(nombreEmpresa+","+cif+"\n")
+                archivo.write(nombreEmpresa+","+cif+","+pin+"\n")
 
             #CREACION CUENTA
             print("\nCreación de cuenta para empresa:")
@@ -107,7 +131,7 @@ while eleccion != 4:
 
             #ESCRIBIR CUENTA
             with open('cuentas.txt',mode='a', encoding='utf-8')as archivo:
-                archivo.write(nombreEmpresa+","+iban+","+moneda+","+saldo+"\n")
+                archivo.write(nombreEmpresa+","+iban+","+moneda+","+saldo+","+pin+"\n")
             menu()
 
 
@@ -115,21 +139,38 @@ while eleccion != 4:
     if eleccion == 1:
         print("Introduce el nombre completo del titular,ya se un particular o una empresa (ej: Jordi Blanch Salgado)")
         varTitularN = str(input())
+        print("Introduzca el número pin")
+        intrPin=str(input())
         encontrado = False
+        validPin=False
         try:
             with open('cuentas.txt',mode='r',encoding='utf-8')as archivo:
                 for linia in archivo:
-                    titularN, iban, moneda, saldo= linia.split(',',3)
-                    varSaldo = saldo.strip("\n")
+                    titularN, iban, moneda, saldo, pin= linia.split(',',4)
+                    varPin = pin.strip("\n")
 
-
-                    if  titularN.upper() == varTitularN.upper():
-                        print(varSaldo,moneda)
+                    if titularN.upper() == varTitularN.upper() and varPin == intrPin:
+                        print(saldo,moneda)
                         encontrado = True
+                        validPin = True
                         menu()
 
-                if encontrado == False:
-                    print("No encontrado este titular en la base de datos")
+                    if intrPin==varPin:
+                        validPin=True
+                    if titularN.upper() == varTitularN.upper():
+                        encontrado = True
+
+                if encontrado == False or validPin == False:
+                    print("ERROR:")
+                if encontrado == False and validPin == True:
+                    print("-No se ha encontrado este titular en la base de datos")
+                    menu()
+                if validPin == False and encontrado== True:
+                    print("-Numero pin erroneo")
+                    menu()
+                if validPin == False and encontrado== False:
+                    print("-No se ha encontrado este titular en la base de datos")
+                    print("-Numero pin erroneo")
                     menu()
         except:
             print("No existe el archivo cuentas.txt , primero debe crear una cuenta!")
@@ -142,20 +183,26 @@ while eleccion != 4:
         print("Debemos identificar la cuenta:")
         print("Introduce tu nombre completo (ej: Jordi Blanch Salgado):")
         nombre = str(input())
+        print("Introduzca el número pin")
+        intrPin=str(input())
         encontrado = False
+        validPin = False
         eleccionMovi = 0
 
         with open('cuentas.txt',mode='r',encoding='utf-8')as archivo:
             for linia in archivo:
                 try:
-                    titular,iban,moneda,saldo= linia.split(',', 3)
-                    saldo = saldo.strip("\n")
+                    titular,iban,moneda,saldo, pin= linia.split(',', 4)
+                    pin = pin.strip("\n")
                 except:
                     print("")
+                if titular.upper() == nombre.upper():
+                    encontrado = True
 
-                if nombre.upper() == titular.upper():
+                if nombre.upper() == titular.upper() and pin == intrPin:
                     cuenta = Cuenta(iban,titular,moneda)
                     encontrado = True
+                    validPin = True
 
                     varIban = cuenta.getIban()
                     varMoneda = cuenta.getMoneda()
@@ -184,19 +231,19 @@ while eleccion != 4:
                                 contenido = ""
                                 contModificad = ""
                                 for linia in archivo:
-                                    titular,iban,moneda,saldo = linia.split(',',3)
-                                    saldo = saldo.strip("\n")
+                                    titular,iban,moneda,saldo,pin = linia.split(',',4)
+                                    pin = pin.strip("\n")
 
                                     nuevoTit = titular.upper()
                                     nuevoNom = nombre.upper()
 
                                     if nuevoNom != nuevoTit:
-                                        contenido = contenido + (nuevoTit+","+iban+","+moneda+","+saldo+"\n")
+                                        contenido = contenido + (nuevoTit+","+iban+","+moneda+","+saldo+","+pin+"\n")
 
                                     else:
                                         varSaldo = int(saldo)
                                         saldoAct = varSaldo + importe
-                                        contModificad = titular+","+iban+","+moneda+","+str(saldoAct)+"\n"
+                                        contModificad = titular+","+iban+","+moneda+","+str(saldoAct)+","+pin+"\n"
 
                                 contTotal = contenido+contModificad
 
@@ -229,8 +276,8 @@ while eleccion != 4:
                                 contenido = ""
                                 flag = False
                                 for linia in archivo:
-                                    titular,iban,moneda,saldo = linia.split(',',3)
-                                    saldo = saldo.strip("\n")
+                                    titular,iban,moneda,saldo, pin = linia.split(',',4)
+                                    pin = pin.strip("\n")
 
                                     nuevoTit = titular.upper()
                                     nuevoNom = nombre.upper()
@@ -238,7 +285,7 @@ while eleccion != 4:
                                     if nuevoNom == nuevoTit:
                                         if int(saldo) > int(importe):
                                             saldoAct = int(saldo) - int(importe)
-                                            contModificad = titular+","+iban+","+moneda+","+str(saldoAct)+"\n"
+                                            contModificad = titular+","+iban+","+moneda+","+str(saldoAct)+","+pin+"\n"
 
                                         else:
                                             flag = True
@@ -246,7 +293,7 @@ while eleccion != 4:
                                             print("Saldo insuficiente")
                                             print("")
                                     else:
-                                        contenido = contenido + (nuevoTit+","+iban+","+moneda+","+saldo+"\n")
+                                        contenido = contenido + (nuevoTit+","+iban+","+moneda+","+saldo+","+pin+"\n")
                                 contTotal = contenido+contModificad
                             if flag != True:
                                 with open('cuentas.txt',mode='w',encoding='utf-8')as archivo:
@@ -263,24 +310,41 @@ while eleccion != 4:
 
                         if eleccionMovi == 3:
                             menu()
-        if encontrado == False:
-            print("Titular no encontrado")
-            menu()
 
+        if encontrado == False or validPin == False:
+            print("ERROR:")
+        if encontrado == False and validPin == True:
+
+            print("-No se ha encontrado este titular en la base de datos")
+            menu()
+        if validPin == False and encontrado== True:
+            print("-Numero pin erroneo")
+            menu()
+        if validPin == False and encontrado== False:
+            print("-No se ha encontrado este titular en la base de datos")
+            print("-Numero pin erroneo")
+            menu()
 
     if eleccion == 3:
         print("Debemos identificar la cuenta:")
         print("Introduce tu nombre completo (ej: Jordi Blanch Salgado):")
         nombre = str(input())
+        print("Introduzca el número pin")
+        intrPin=str(input())
 
         with open('cuentas.txt',mode='r',encoding='utf-8')as archivo:
             encontrado = False
+            validPin = False
             for linia in archivo:
-                titular,iban,moneda,saldo = linia.split(',',3)
-                saldo = saldo.strip("\n")
+                titular,iban,moneda,saldo, pin = linia.split(',',4)
+                pin = pin.strip("\n")
 
                 if titular.upper() == nombre.upper():
                     encontrado = True
+
+                if titular.upper() == nombre.upper() and pin == intrPin:
+                    encontrado = True
+                    validPin = True
                     varCuentaIban = iban
                     with open('movimientos.txt',mode='r',encoding='utf-8')as archivo:
                         for linia in archivo:
@@ -290,8 +354,19 @@ while eleccion != 4:
                             if varCuentaIban == iban:
                                 print(linia)
 
-            if encontrado == False:
-                print("Titular no encontrado")
+            if encontrado == False or validPin == False:
+                print("ERROR:")
+            if encontrado == False and validPin == True:
+
+                print("-No se ha encontrado este titular en la base de datos")
+
+            if validPin == False and encontrado== True:
+                print("-Numero pin erroneo")
+
+            if validPin == False and encontrado== False:
+                print("-No se ha encontrado este titular en la base de datos")
+                print("-Numero pin erroneo")
+
 
         menu()
 
