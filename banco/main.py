@@ -60,7 +60,7 @@ while eleccion != 5:
             pin2=str(input())
 
             while pin!=pin2:
-                print("Los numero pin no coinciden, vuelva intentarlo\n")
+                print("Los numeros pin no coinciden, vuelva a intentarlo\n")
                 print("Introduzca el que va ser su numero pin (4 digitos)")
                 pin=str(input())
                 print("Repita el numero pin")
@@ -77,7 +77,6 @@ while eleccion != 5:
                 archivo.write(nombrePersona+","+nif+","+pin+"\n")
 
             #CREACION CUENTA
-            print("\nCreación de cuenta para particular:")
             iban = str(randrange(2000,2999))
             iban += " "+str(randrange(0,9999)).zfill(4)
             iban += " "+str(randrange(0, 99)).zfill(2)
@@ -90,6 +89,10 @@ while eleccion != 5:
             #ESCRIBIR CUENTA
             with open('cuentas.txt',mode='a', encoding='utf-8')as archivo:
                 archivo.write(nombrePersona+","+iban+","+moneda+","+saldo+","+pin+"\n")
+
+            print("")
+            print("Cuenta creada con éxito ")
+            print("Su numero de cuenta: "+iban)
             menu()
         #EMPRESA
         if tipo == 2:
@@ -97,14 +100,13 @@ while eleccion != 5:
             varNombre = str(input())
             print("Cif:")
             varCif = str(input())
-            dni = str(input())
             print("Introduzca el que va ser su numero pin (4 digitos)")
             pin=str(input())
             print("Repita el numero pin")
             pin2=str(input())
 
             while pin!=pin2:
-                print("Los numero pin no coinciden, vuelva intentarlo\n")
+                print("Los numeros pin no coinciden, vuelva a intentarlo\n")
                 print("Introduzca el que va ser su numero pin (4 digitos)")
                 pin=str(input())
                 print("Repita el numero pin")
@@ -114,14 +116,12 @@ while eleccion != 5:
             empresa = Empresa(varNombre,varCif)
             nombreEmpresa = empresa.getNombre()
             cif = empresa.getCif()
-            print(nombreEmpresa,cif)
 
             #ESCRIBIR EL TITULARES.TXT
             with open('titulares.txt', mode='a', encoding='utf-8')as archivo:
                 archivo.write(nombreEmpresa+","+cif+","+pin+"\n")
 
             #CREACION CUENTA
-            print("\nCreación de cuenta para empresa:")
             iban = str(randrange(2000,2999))
             iban += " "+str(randrange(0,9999)).zfill(4)
             iban += " "+str(randrange(0, 99)).zfill(2)
@@ -133,6 +133,9 @@ while eleccion != 5:
             #ESCRIBIR CUENTA
             with open('cuentas.txt',mode='a', encoding='utf-8')as archivo:
                 archivo.write(nombreEmpresa+","+iban+","+moneda+","+saldo+","+pin+"\n")
+            print("")
+            print("Cuenta creada con éxito ")
+            print("Su numero de cuenta: "+iban)
             menu()
 
 
@@ -521,7 +524,6 @@ while eleccion != 5:
                 print("-No se ha encontrado este titular en la base de datos")
                 print("-Numero pin erroneo")
                 menu()
-            menu()
         except:
             menu()
     if eleccion == 5:
@@ -529,6 +531,6 @@ while eleccion != 5:
         print("Hasta la próxima")
         print("CERRANDO...")
     #SALIR
-    if eleccion != 1 and eleccion != 2 and eleccion != 0 and eleccion != 3 and eleccion !=4:
+    if eleccion != 1 and eleccion != 2 and eleccion != 0 and eleccion != 3 and eleccion !=4 and eleccion !=5:
         print("Introduce una opcion válida")
 
