@@ -376,136 +376,154 @@ while eleccion != 4:
         nombre = str(input())
         print("Introduzca el número pin")
         intrPin=str(input())
+        try:
+            with open('cuentas.txt',mode='r',encoding='utf-8')as archivo:
+                encontrado = False
+                validPin = False
+                for linia in archivo:
+                    titular,iban,moneda,saldo, pin = linia.split(',',4)
+                    pin = pin.strip("\n")
 
-        with open('cuentas.txt',mode='r',encoding='utf-8')as archivo:
-            encontrado = False
-            validPin = False
-            for linia in archivo:
-                titular,iban,moneda,saldo, pin = linia.split(',',4)
-                pin = pin.strip("\n")
+                    if titular.upper() == nombre.upper():
+                        encontrado = True
 
-                if titular.upper() == nombre.upper():
-                    encontrado = True
+                    if titular.upper() == nombre.upper() and pin == intrPin:
+                        encontrado = True
+                        validPin = True
+                        cuenta = Cuenta(iban,titular,moneda)
 
-                if titular.upper() == nombre.upper() and pin == intrPin:
-                    encontrado = True
-                    validPin = True
-                    cuenta = Cuenta(iban,titular,moneda)
-
-                    varIban = cuenta.getIban()
-                    varMoneda = cuenta.getMoneda()
-                    varSaldo = saldo
-                    ##RETIRAR################################################
-                    print("Introduzca la cantidad que desea transferir:")
-                    importe = int(input())
-                    print("Introduzca la cuenta a la que desea hacer la transferencia:")
-                    ibanDestino = str(input())
-                    signo = "-"
-                    i = datetime.datetime.now()
-                    now= str(i.day)+"/"+str(i.month)+"/"+str(i.year)+" "+str(i.hour)+":"+ str(i.minute)+":"+str(i.second)
-
-                    movimiento = Movimientos(now,varIban,importe,signo)
-
-                    fecha = movimiento.getFecha()
-                    iban = movimiento.getIban()
-                    importe = movimiento.getImporte()
-                    signo = movimiento.getSigno()
-
-                    with open('cuentas.txt',mode='r',encoding='utf-8')as archivo:
-                        contenido = ""
-                        contModificad = ""
-                        flag = False
-                        for linia in archivo:
-                            titular,iban,moneda,saldo, pin = linia.split(',',4)
-                            pin = pin.strip("\n")
-
-                            nuevoTit = titular.upper()
-                            nuevoNom = nombre.upper()
-
-                            if nuevoNom == nuevoTit:
-                                if int(saldo) > int(importe):
-                                    saldoAct = int(saldo) - int(importe)
-                                    contModificad = titular+","+iban+","+moneda+","+str(saldoAct)+","+pin+"\n"
-
-                                else:
-                                    flag = True
-                                    print("")
-                                    print("Saldo insuficiente")
-                                    print("")
-                            else:
-                                contenido = contenido + (nuevoTit+","+iban+","+moneda+","+saldo+","+pin+"\n")
-                        contTotal = contenido+contModificad
-                    if flag != True:
-                        with open('cuentas.txt',mode='w',encoding='utf-8')as archivo:
-                            archivo.write(contTotal)
-                            print("")
-                            print("---RETIRADO---")
-                            print("")
-
-                        #UPDATE FICHERO MOVIMIENTOS
-                        contMovi = str(fecha)+","+str(iban)+","+signo+""+str(importe)+"\n"
-                        with open('movimientos.txt',mode='a',encoding='utf-8')as archivo:
-                            archivo.write(contMovi)
-                        ##INGRESAR###########################################################################
-
-                        ##print("Introduzca la cantidad a ingresar:")
-                        importeIng = importe
-                        signo = "+"
+                        varIban = cuenta.getIban()
+                        varMoneda = cuenta.getMoneda()
+                        varSaldo = saldo
+                        ##RETIRAR################################################
+                        print("Introduzca la cantidad que desea transferir:")
+                        importe = int(input())
+                        print("Introduzca la cuenta a la que desea hacer la transferencia:")
+                        ibanDestino = str(input())
+                        signo = "-"
                         i = datetime.datetime.now()
                         now= str(i.day)+"/"+str(i.month)+"/"+str(i.year)+" "+str(i.hour)+":"+ str(i.minute)+":"+str(i.second)
 
-                        movimiento = Movimientos(now,ibanDestino,importeIng,signo)
+                        movimiento = Movimientos(now,varIban,importe,signo)
 
                         fecha = movimiento.getFecha()
-                        ibanDestino = movimiento.getIban()
-                        importeIng = movimiento.getImporte()
+                        iban = movimiento.getIban()
+                        importe = movimiento.getImporte()
                         signo = movimiento.getSigno()
 
                         with open('cuentas.txt',mode='r',encoding='utf-8')as archivo:
-                            contenido = ""
-                            contModificad = ""
+                            validCuenta = False
                             for linia in archivo:
-                                titular,iban,moneda,saldo,pin = linia.split(',',4)
+                                titular,iban,moneda,saldo, pin = linia.split(',',4)
                                 pin = pin.strip("\n")
 
-                                nuevoTit = titular.upper()
-                                nuevoNom = nombre.upper()
+                                if iban == ibanDestino:
+                                    validCuenta = True
 
-                                if iban != ibanDestino:
-                                    contenido = contenido + (nuevoTit+","+iban+","+moneda+","+saldo+","+pin+"\n")
+                        if not validCuenta:
+                            print("Numero de cuenta no encontrado")
 
-                                else:
-                                    varSaldo = int(saldo)
-                                    saldoAct = varSaldo + importeIng
-                                    contModificad = titular+","+iban+","+moneda+","+str(saldoAct)+","+pin+"\n"
+                        if validCuenta:
+                            with open('cuentas.txt',mode='r',encoding='utf-8')as archivo:
+                                contenido = ""
+                                contModificad = ""
+                                flag = False
+                                for linia in archivo:
+                                    titular,iban,moneda,saldo, pin = linia.split(',',4)
+                                    pin = pin.strip("\n")
 
-                            contTotal = contenido+contModificad
+                                    nuevoTit = titular.upper()
+                                    nuevoNom = nombre.upper()
 
-                        with open('cuentas.txt',mode='w',encoding='utf-8')as archivo:
-                            archivo.write(contTotal)
-                            print("")
-                            print("---INGRESADO---")
-                            print("")
+                                    if nuevoNom == nuevoTit and validCuenta:
 
-                        #UPDATE FICHERO MOVIMIENTOS
-                        contMovi = str(fecha)+","+str(iban)+","+signo+""+str(importeIng)+"\n"
-                        with open('movimientos.txt',mode='a',encoding='utf-8')as archivo:
-                            archivo.write(contMovi)
+                                        if int(saldo) > int(importe):
+                                            saldoAct = int(saldo) - int(importe)
+                                            contModificad = titular+","+iban+","+moneda+","+str(saldoAct)+","+pin+"\n"
 
-        if encontrado == False or validPin == False:
-            print("ERROR:")
-        if encontrado == False and validPin == True:
+                                        else:
+                                            flag = True
+                                            print("")
+                                            print("Saldo insuficiente")
+                                            print("")
+                                    else:
+                                        contenido = contenido + (nuevoTit+","+iban+","+moneda+","+saldo+","+pin+"\n")
+                                contTotal = contenido+contModificad
 
-            print("-No se ha encontrado este titular en la base de datos")
+                            if flag != True:
+                                with open('cuentas.txt',mode='w',encoding='utf-8')as archivo:
+                                    archivo.write(contTotal)
+                                    print("")
+                                    print("---RETIRADO---")
+                                    print("")
+
+                                #UPDATE FICHERO MOVIMIENTOS
+                                contMovi = str(fecha)+","+str(iban)+","+signo+""+str(importe)+"\n"
+                                with open('movimientos.txt',mode='a',encoding='utf-8')as archivo:
+                                    archivo.write(contMovi)
+                                ##INGRESAR###########################################################################
+
+
+                                importeIng = importe
+                                signo = "+"
+                                i = datetime.datetime.now()
+                                now= str(i.day)+"/"+str(i.month)+"/"+str(i.year)+" "+str(i.hour)+":"+ str(i.minute)+":"+str(i.second)
+
+                                movimiento = Movimientos(now,ibanDestino,importeIng,signo)
+
+                                fecha = movimiento.getFecha()
+                                ibanDestino = movimiento.getIban()
+                                importeIng = movimiento.getImporte()
+                                signo = movimiento.getSigno()
+
+                                with open('cuentas.txt',mode='r',encoding='utf-8')as archivo:
+                                    contenido = ""
+                                    contModificad = ""
+                                    for linia in archivo:
+                                        titular,iban,moneda,saldo,pin = linia.split(',',4)
+                                        pin = pin.strip("\n")
+
+                                        nuevoTit = titular.upper()
+                                        nuevoNom = nombre.upper()
+
+                                        if iban != ibanDestino:
+                                            contenido = contenido + (nuevoTit+","+iban+","+moneda+","+saldo+","+pin+"\n")
+
+                                        else:
+                                            varSaldo = int(saldo)
+                                            saldoAct = varSaldo + importeIng
+                                            contModificad = titular+","+iban+","+moneda+","+str(saldoAct)+","+pin+"\n"
+
+                                    contTotal = contenido+contModificad
+
+                                with open('cuentas.txt',mode='w',encoding='utf-8')as archivo:
+                                    archivo.write(contTotal)
+                                    print("")
+                                    print("---INGRESADO---")
+                                    print("")
+
+                                #UPDATE FICHERO MOVIMIENTOS
+                                contMovi = str(fecha)+","+str(iban)+","+signo+""+str(importeIng)+"\n"
+                                with open('movimientos.txt',mode='a',encoding='utf-8')as archivo:
+                                    archivo.write(contMovi)
+
+
+            if encontrado == False or validPin == False:
+                print("ERROR:")
+            if encontrado == False and validPin == True:
+
+                print("-No se ha encontrado este titular en la base de datos")
+                menu()
+            if validPin == False and encontrado== True:
+                print("-Numero pin erroneo")
+                menu()
+            if validPin == False and encontrado== False:
+                print("-No se ha encontrado este titular en la base de datos")
+                print("-Numero pin erroneo")
+                menu()
             menu()
-        if validPin == False and encontrado== True:
-            print("-Numero pin erroneo")
+        except:
             menu()
-        if validPin == False and encontrado== False:
-            print("-No se ha encontrado este titular en la base de datos")
-            print("-Numero pin erroneo")
-            menu()
-        menu()
     if eleccion == 5:
         print("")
         print("Hasta la próxima")
