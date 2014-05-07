@@ -1,5 +1,3 @@
-Empresa1,B-6543345
-jaume blanch delclos,132412341
 alex dom alum,12345678a,1234
 a a a,12345678a,1234
 b b b,12345678a,4321
