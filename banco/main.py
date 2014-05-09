@@ -112,7 +112,7 @@ while eleccion != 5:
         if tipo == 2:
             print("Razón social:")
             varNombre = str(input())
-            print("Cif:")
+            print("Cif: Ejemplo:B12345678")
             varCif = str(input())
             comprovar=comprovaciodni=ComprovacioDni.validacioCif(varCif)
             if (comprovar==False):
