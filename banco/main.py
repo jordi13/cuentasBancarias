@@ -392,8 +392,10 @@ while eleccion != 5:
                                         print("")
                                         print("Saldo insuficiente")
                                         print("")
+                                        menu()
                                 else:
                                     contenido = contenido + (nuevoTit+","+iban+","+moneda+","+saldo+","+pin+"\n")
+
                             contTotal = contenido+contModificad
 
                         if flag != True:
