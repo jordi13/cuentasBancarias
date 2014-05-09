@@ -173,10 +173,10 @@ while eleccion != 5:
                     print("ERROR:")
                 if encontrado == False and validPin == True:
                     print("-No se ha encontrado este titular en la base de datos")
-                    menu()
+
                 if validPin == False and encontrado== True:
                     print("-Numero pin erroneo")
-                    menu()
+
                 if validPin == False and encontrado== False:
                     print("-No se ha encontrado este titular en la base de datos")
                     print("-Numero pin erroneo")
