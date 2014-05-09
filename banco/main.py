@@ -345,7 +345,7 @@ while eleccion != 5:
                     importe = int(input())
                     print("Introduzca la cuenta a la que desea hacer la transferencia:")
                     ibanDestino = str(input())
-                    signo = "-"
+                    signo = "+"
                     i = datetime.datetime.now()
                     now= str(i.day)+"/"+str(i.month)+"/"+str(i.year)+" "+str(i.hour)+":"+ str(i.minute)+":"+str(i.second)
 
@@ -411,7 +411,7 @@ while eleccion != 5:
 
 
                             importeIng = importe
-                            signo = "+"
+                            signo = "-"
                             i = datetime.datetime.now()
                             now= str(i.day)+"/"+str(i.month)+"/"+str(i.year)+" "+str(i.hour)+":"+ str(i.minute)+":"+str(i.second)
 
