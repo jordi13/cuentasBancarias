@@ -430,7 +430,7 @@ while eleccion != 5:
                                         nuevoTit = titular.upper()
                                         nuevoNom = nombre.upper()
 
-                                        if iban != ibanDestino:
+                                        if iban == ibanDestino:
                                             varSaldo = int(saldo)
                                             saldoAct = varSaldo + importeIng
                                             contModificad = titular+","+iban+","+moneda+","+str(saldoAct)+","+pin+"\n"

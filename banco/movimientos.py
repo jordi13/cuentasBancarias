@@ -30,7 +30,7 @@ class Movimientos():
                 nuevoTit = titular.upper()
                 nuevoNom = nombre.upper()
                 if nuevoNom != nuevoTit:
-                    contenido = contenido + (nuevoTit + "," + self.iban + "," + moneda + "," + saldo + "," + pin + "\n")
+                    contenido = contenido + (nuevoTit + "," + iban + "," + moneda + "," + saldo + "," + pin + "\n")
                 else:
                     varSaldo = int(saldo)
                     saldoAct = varSaldo + self.importe
