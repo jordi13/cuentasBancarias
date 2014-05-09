@@ -7,6 +7,7 @@ from cuenta import Cuenta
 from empresa import Empresa
 from movimientos import Movimientos
 import datetime
+from titular import Titular
 from random import randrange
 
 
@@ -73,26 +74,32 @@ while eleccion != 5:
             nif = persona.getNif()
 
             #ESCRIBIR EL TITULARES.TXT
-            with open('titulares.txt', mode='a', encoding='utf-8')as archivo:
-                archivo.write(nombrePersona+","+nif+","+pin+"\n")
-
-            #CREACION CUENTA
-            iban = str(randrange(2000,2999))
-            iban += " "+str(randrange(0,9999)).zfill(4)
-            iban += " "+str(randrange(0, 99)).zfill(2)
-            iban += " "+str(randrange(1000000000, 9999999999))
+            titular=Titular(nombre)
+            titular=titular.escribirTitular(nombrePersona,nif,pin)
+            #with open('titulares.txt', mode='a', encoding='utf-8')as archivo:
+                #archivo.write(nombrePersona+","+nif+","+pin+"\n")
 
             print("Introduce la moneda ")
             moneda = str(input())
             saldo = "0"
+            #CREACION CUENTA
+            cuenta=Cuenta('',nombrePersona,moneda)
+            varIban1=cuenta.genIban()
+            cuenta=cuenta.creacionCuenta(pin,varIban1)
+            #iban = str(randrange(2000,2999))
+            #iban += " "+str(randrange(0,9999)).zfill(4)
+            #iban += " "+str(randrange(0, 99)).zfill(2)
+            #iban += " "+str(randrange(1000000000, 9999999999))
+
+
 
             #ESCRIBIR CUENTA
-            with open('cuentas.txt',mode='a', encoding='utf-8')as archivo:
-                archivo.write(nombrePersona+","+iban+","+moneda+","+saldo+","+pin+"\n")
+            #with open('cuentas.txt',mode='a', encoding='utf-8')as archivo:
+                #archivo.write(nombrePersona+","+iban+","+moneda+","+saldo+","+pin+"\n")
 
-            print("")
-            print("Cuenta creada con éxito ")
-            print("Su numero de cuenta: "+iban)
+            #print("")
+            #print("Cuenta creada con éxito ")
+            #print("Su numero de cuenta: "+iban)
             menu()
         #EMPRESA
         if tipo == 2:
@@ -118,24 +125,32 @@ while eleccion != 5:
             cif = empresa.getCif()
 
             #ESCRIBIR EL TITULARES.TXT
-            with open('titulares.txt', mode='a', encoding='utf-8')as archivo:
-                archivo.write(nombreEmpresa+","+cif+","+pin+"\n")
+
+            titular=Titular(varNombre)
+            titular=titular.escribirTitular(nombreEmpresa,cif,pin)
+            #with open('titulares.txt', mode='a', encoding='utf-8')as archivo:
+                #archivo.write(nombreEmpresa+","+cif+","+pin+"\n")
 
             #CREACION CUENTA
-            iban = str(randrange(2000,2999))
-            iban += " "+str(randrange(0,9999)).zfill(4)
-            iban += " "+str(randrange(0, 99)).zfill(2)
-            iban += " "+str(randrange(1000000000, 9999999999))
             print("Introduce la moneda ")
             moneda = str(input())
-            saldo = "0"
+            cuenta=Cuenta('',nombreEmpresa,moneda)
+            varIban2=cuenta.genIban()
+            cuenta=cuenta.creacionCuenta(pin,varIban2)
+            #iban = str(randrange(2000,2999))
+            #iban += " "+str(randrange(0,9999)).zfill(4)
+            #iban += " "+str(randrange(0, 99)).zfill(2)
+            #iban += " "+str(randrange(1000000000, 9999999999))
+            #print("Introduce la moneda ")
+            #moneda = str(input())
+            #saldo = "0"
 
             #ESCRIBIR CUENTA
-            with open('cuentas.txt',mode='a', encoding='utf-8')as archivo:
-                archivo.write(nombreEmpresa+","+iban+","+moneda+","+saldo+","+pin+"\n")
-            print("")
-            print("Cuenta creada con éxito ")
-            print("Su numero de cuenta: "+iban)
+            #with open('cuentas.txt',mode='a', encoding='utf-8')as archivo:
+                #archivo.write(nombreEmpresa+","+iban+","+moneda+","+saldo+","+pin+"\n")
+            #print("")
+            #print("Cuenta creada con éxito ")
+            #print("Su numero de cuenta: "+iban)
             menu()
 
 
@@ -148,6 +163,9 @@ while eleccion != 5:
         encontrado = False
         validPin=False
         try:
+            #consultarSaldo=Cuenta()
+            #consultarSaldo=Movimientos.consultarSaldo(varTitularN,intrPin)
+            #menu()
             with open('cuentas.txt',mode='r',encoding='utf-8')as archivo:
                 for linia in archivo:
                     titularN, iban, moneda, saldo, pin= linia.split(',',4)
@@ -175,7 +193,7 @@ while eleccion != 5:
                 if validPin == False and encontrado== False:
                     print("-No se ha encontrado este titular en la base de datos")
                     print("-Numero pin erroneo")
-                    menu()
+            menu()
         except:
             print("No existe el archivo cuentas.txt , primero debe crear una cuenta!")
             menu()
@@ -224,43 +242,44 @@ while eleccion != 5:
                             i = datetime.datetime.now()
                             now= str(i.day)+"/"+str(i.month)+"/"+str(i.year)+" "+str(i.hour)+":"+ str(i.minute)+":"+str(i.second)
 
-                            movimiento = Movimientos(now,varIban,importe,signo)
+                            movimientos = Movimientos(now,varIban,importe,signo)
 
-                            fecha = movimiento.getFecha()
-                            iban = movimiento.getIban()
-                            importe = movimiento.getImporte()
-                            signo = movimiento.getSigno()
-
-                            with open('cuentas.txt',mode='r',encoding='utf-8')as archivo:
-                                contenido = ""
-                                contModificad = ""
-                                for linia in archivo:
-                                    titular,iban,moneda,saldo,pin = linia.split(',',4)
-                                    pin = pin.strip("\n")
-
-                                    nuevoTit = titular.upper()
-                                    nuevoNom = nombre.upper()
-
-                                    if nuevoNom != nuevoTit:
-                                        contenido = contenido + (nuevoTit+","+iban+","+moneda+","+saldo+","+pin+"\n")
-
-                                    else:
-                                        varSaldo = int(saldo)
-                                        saldoAct = varSaldo + importe
-                                        contModificad = titular+","+iban+","+moneda+","+str(saldoAct)+","+pin+"\n"
-
-                                contTotal = contenido+contModificad
-
-                            with open('cuentas.txt',mode='w',encoding='utf-8')as archivo:
-                                archivo.write(contTotal)
-                                print("")
-                                print("---INGRESADO---")
-                                print("")
+                            #fecha = movimiento.getFecha()
+                            #iban = movimiento.getIban()
+                            #importe = movimiento.getImporte()
+                            #signo = movimiento.getSigno()
+                            movimientos.ingresar(titular)
+                            # with open('cuentas.txt',mode='r',encoding='utf-8')as archivo:
+                            #     contenido = ""
+                            #     contModificad = ""
+                            #     for linia in archivo:
+                            #         titular,iban,moneda,saldo,pin = linia.split(',',4)
+                            #         pin = pin.strip("\n")
+                            #
+                            #         nuevoTit = titular.upper()
+                            #         nuevoNom = nombre.upper()
+                            #
+                            #         if nuevoNom != nuevoTit:
+                            #             contenido = contenido + (nuevoTit+","+iban+","+moneda+","+saldo+","+pin+"\n")
+                            #
+                            #         else:
+                            #             varSaldo = int(saldo)
+                            #             saldoAct = varSaldo + importe
+                            #             contModificad = titular+","+iban+","+moneda+","+str(saldoAct)+","+pin+"\n"
+                            #
+                            #     contTotal = contenido+contModificad
+                            #
+                            # with open('cuentas.txt',mode='w',encoding='utf-8')as archivo:
+                            #     archivo.write(contTotal)
+                            #     print("")
+                            #     print("---INGRESADO---")
+                            #     print("")
 
                             #UPDATE FICHERO MOVIMIENTOS
-                            contMovi = str(fecha)+","+str(iban)+","+signo+""+str(importe)+"\n"
-                            with open('movimientos.txt',mode='a',encoding='utf-8')as archivo:
-                                archivo.write(contMovi)
+                            movimientos.updateMovimientos()
+                            #contMovi = str(fecha)+","+str(iban)+","+signo+""+str(importe)+"\n"
+                            #with open('movimientos.txt',mode='a',encoding='utf-8')as archivo:
+                                #archivo.write(contMovi)
                         #RETIRAR
                         if eleccionMovi == 2:
                             print("Introduzca la cantidad a retirar:")
@@ -271,45 +290,46 @@ while eleccion != 5:
 
                             movimiento = Movimientos(now,varIban,importe,signo)
 
-                            fecha = movimiento.getFecha()
-                            iban = movimiento.getIban()
-                            importe = movimiento.getImporte()
-                            signo = movimiento.getSigno()
-
-                            with open('cuentas.txt',mode='r',encoding='utf-8')as archivo:
-                                contenido = ""
-                                flag = False
-                                for linia in archivo:
-                                    titular,iban,moneda,saldo, pin = linia.split(',',4)
-                                    pin = pin.strip("\n")
-
-                                    nuevoTit = titular.upper()
-                                    nuevoNom = nombre.upper()
-
-                                    if nuevoNom == nuevoTit:
-                                        if int(saldo) > int(importe):
-                                            saldoAct = int(saldo) - int(importe)
-                                            contModificad = titular+","+iban+","+moneda+","+str(saldoAct)+","+pin+"\n"
-
-                                        else:
-                                            flag = True
-                                            print("")
-                                            print("Saldo insuficiente")
-                                            print("")
-                                    else:
-                                        contenido = contenido + (nuevoTit+","+iban+","+moneda+","+saldo+","+pin+"\n")
-                                contTotal = contenido+contModificad
-                            if flag != True:
-                                with open('cuentas.txt',mode='w',encoding='utf-8')as archivo:
-                                    archivo.write(contTotal)
-                                    print("")
-                                    print("---RETIRADO---")
-                                    print("")
+                            #fecha = movimiento.getFecha()
+                            #iban = movimiento.getIban()
+                            #importe = movimiento.getImporte()
+                            #signo = movimiento.getSigno()
+                            movimiento.retirar(titular)
+                            # with open('cuentas.txt',mode='r',encoding='utf-8')as archivo:
+                            #     contenido = ""
+                            #     flag = False
+                            #     for linia in archivo:
+                            #         titular,iban,moneda,saldo, pin = linia.split(',',4)
+                            #         pin = pin.strip("\n")
+                            #
+                            #         nuevoTit = titular.upper()
+                            #         nuevoNom = nombre.upper()
+                            #
+                            #         if nuevoNom == nuevoTit:
+                            #             if int(saldo) > int(importe):
+                            #                 saldoAct = int(saldo) - int(importe)
+                            #                 contModificad = titular+","+iban+","+moneda+","+str(saldoAct)+","+pin+"\n"
+                            #
+                            #             else:
+                            #                 flag = True
+                            #                 print("")
+                            #                 print("Saldo insuficiente")
+                            #                 print("")
+                            #         else:
+                            #             contenido = contenido + (nuevoTit+","+iban+","+moneda+","+saldo+","+pin+"\n")
+                            #     contTotal = contenido+contModificad
+                            # if flag != True:
+                            #     with open('cuentas.txt',mode='w',encoding='utf-8')as archivo:
+                            #         archivo.write(contTotal)
+                            #         print("")
+                            #         print("---RETIRADO---")
+                            #         print("")
 
                                 #UPDATE FICHERO MOVIMIENTOS
-                                contMovi = str(fecha)+","+str(iban)+","+signo+""+str(importe)+"\n"
-                                with open('movimientos.txt',mode='a',encoding='utf-8')as archivo:
-                                    archivo.write(contMovi)
+                            movimiento.updateMovimientos()
+                                # contMovi = str(fecha)+","+str(iban)+","+signo+""+str(importe)+"\n"
+                                # with open('movimientos.txt',mode='a',encoding='utf-8')as archivo:
+                                #     archivo.write(contMovi)
 
 
                         if eleccionMovi == 3:
