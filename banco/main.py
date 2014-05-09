@@ -8,6 +8,7 @@ from empresa import Empresa
 from movimientos import Movimientos
 import datetime
 from titular import Titular
+from comprovacioDni import ComprovacioDni
 from random import randrange
 
 
@@ -55,6 +56,12 @@ while eleccion != 5:
             apellido2 = var[2]
             print("Dni/Nif:")
             dni = str(input())
+            #--
+
+            comprovaciodni=ComprovacioDni()
+            comprovar=comprovaciodni=ComprovacioDni.validacio_dni(dni)
+            if (comprovar==False):
+                menu()
             print("Introduzca el que va ser su numero pin (4 digitos)")
             pin=str(input())
             print("Repita el numero pin")
@@ -107,6 +114,9 @@ while eleccion != 5:
             varNombre = str(input())
             print("Cif:")
             varCif = str(input())
+            comprovar=comprovaciodni=ComprovacioDni.validacioCif(varCif)
+            if (comprovar==False):
+                menu()
             print("Introduzca el que va ser su numero pin (4 digitos)")
             pin=str(input())
             print("Repita el numero pin")
