@@ -367,6 +367,7 @@ while eleccion != 5:
 
                         if not validCuenta:
                             print("Numero de cuenta no encontrado")
+                            menu()
 
                         if validCuenta:
                             with open('cuentas.txt',mode='r',encoding='utf-8')as archivo:
