@@ -2,6 +2,7 @@ cuentasBancarias
 ================
 
 1.0<br>
+Se reuiere Python 3<br>
 <h3>Aplicación Python para manejo de cuentas bancarias.</h3><br>
 El programa permite :<br>
 <p>•	Crear Cuenta para persona física y para persona jurídica:<br>
