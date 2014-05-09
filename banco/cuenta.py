@@ -1,6 +1,5 @@
 __author__ = 'jordiblanchsalgado'
 from random import randrange
-#import main
 class Cuenta():
     def __init__(self,iban,titular,moneda):
         self.iban = iban
