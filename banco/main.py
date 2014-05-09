@@ -419,7 +419,7 @@ while eleccion != 5:
                                 ibanDestino = movimiento.getIban()
                                 importeIng = movimiento.getImporte()
                                 signo = movimiento.getSigno()
-
+                                print(ibanDestino)
                                 with open('cuentas.txt',mode='r',encoding='utf-8')as archivo:
                                     contenido = ""
                                     contModificad = ""
@@ -431,15 +431,16 @@ while eleccion != 5:
                                         nuevoNom = nombre.upper()
 
                                         if iban != ibanDestino:
-                                            contenido = contenido + (nuevoTit+","+iban+","+moneda+","+saldo+","+pin+"\n")
-
-                                        else:
                                             varSaldo = int(saldo)
                                             saldoAct = varSaldo + importeIng
                                             contModificad = titular+","+iban+","+moneda+","+str(saldoAct)+","+pin+"\n"
+                                        else:
+
+                                            contenido = contenido + (nuevoTit+","+iban+","+moneda+","+saldo+","+pin+"\n")
+                                            print(contenido)
 
                                     contTotal = contenido+contModificad
-
+                                    print(contTotal)
                                 with open('cuentas.txt',mode='w',encoding='utf-8')as archivo:
                                     archivo.write(contTotal)
                                     print("")
