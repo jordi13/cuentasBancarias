@@ -2,8 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../Fliki/.idea/Fliki.iml" filepath="$PROJECT_DIR$/../Fliki/.idea/Fliki.iml" />
       <module fileurl="file://$PROJECT_DIR$/banco/.idea/banco.iml" filepath="$PROJECT_DIR$/banco/.idea/banco.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/cuentasBancarias.iml" filepath="$PROJECT_DIR$/.idea/cuentasBancarias.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../Fliki/flikiPackage/.idea/flikiPackage.iml" filepath="$PROJECT_DIR$/../Fliki/flikiPackage/.idea/flikiPackage.iml" />
     </modules>
   </component>
 </project>

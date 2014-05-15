@@ -5,6 +5,8 @@
     <orderEntry type="jdk" jdkName="Python 3.3.3 (/usr/local/bin/python3.3)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="banco" />
+    <orderEntry type="module" module-name="Fliki" />
+    <orderEntry type="module" module-name="flikiPackage" />
   </component>
   <component name="PyDocumentationSettings">
     <option name="myDocStringFormat" value="Plain" />
